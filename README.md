@@ -1,4 +1,4 @@
-# LinguaAI 🌍
+# NativeChat 🌍
 
 Aplicativo Flutter de aprendizado de inglês com IA conversacional. Converse com **Aria**, sua tutora de inglês, obtenha correções gramaticais em tempo real, aprenda palavras novas e acompanhe seu progresso.
 
