@@ -1,0 +1,57 @@
+name: study_english
+description: "NativeChat - Aplicativo de aprendizado de inglês com IA conversacional"
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.11.5
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+
+  # Estado
+  flutter_riverpod: ^2.6.1
+
+  # HTTP
+  dio: ^5.8.0
+
+  # Banco local (Drift/SQLite)
+  drift: ^2.20.0
+  sqlite3_flutter_libs: ^0.5.25
+  path_provider: ^2.1.4
+  path: ^1.9.0
+
+  # Configuração
+  flutter_dotenv: ^5.2.1
+
+  # UI
+  google_fonts: ^6.2.1
+  fl_chart: ^0.69.0
+
+  # Preferências locais
+  shared_preferences: ^2.3.2
+
+  # Utilitários
+  intl: ^0.19.0
+
+  # Pagamentos / assinaturas
+  purchases_flutter: ^8.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+  # Geração de código Drift
+  drift_dev: ^2.20.0
+  build_runner: ^2.4.12
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - .env

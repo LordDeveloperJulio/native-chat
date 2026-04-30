@@ -1,0 +1,179 @@
+{
+  "@@locale": "en",
+
+  "appName": "NativeChat",
+
+  "onboardingPage1Title": "Hi! What's your name?",
+  "onboardingPage1Subtitle": "I'll use your name to personalize your experience",
+  "onboardingPage1FieldLabel": "Your name",
+  "onboardingPage1Button": "Continue",
+
+  "onboardingPage2Title": "What's your English level?",
+  "onboardingPage2Subtitle": "I'll adapt the conversations to your level",
+  "onboardingPage2Button": "Continue",
+  "levelBeginner": "Beginner",
+  "levelBeginnerSubtitle": "I'm just starting out",
+  "levelIntermediate": "Intermediate",
+  "levelIntermediateSubtitle": "I know the basics",
+  "levelAdvanced": "Advanced",
+  "levelAdvancedSubtitle": "I want to perfect my English",
+
+  "onboardingPage3Title": "How do you want to practice?",
+  "onboardingPage3Subtitle": "You can change this anytime",
+  "onboardingPage3Button": "Let's go!",
+  "modeCasual": "Casual",
+  "modeCasualSubtitle": "Everyday conversations",
+  "modeBusiness": "Business",
+  "modeBusinessSubtitle": "Emails and meetings",
+  "modeTravel": "Travel",
+  "modeTravelSubtitle": "Airport, hotel, directions",
+  "modeInterview": "Interview",
+  "modeInterviewSubtitle": "Job interview practice",
+
+  "homeGreeting": "Good morning, {name}",
+  "@homeGreeting": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "homeGreetingAfternoon": "Good afternoon, {name}",
+  "@homeGreetingAfternoon": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "homeGreetingEvening": "Good evening, {name}",
+  "@homeGreetingEvening": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "homeTitle": "Ready to practice today?",
+  "homeStreakLabel": "day streak",
+  "homeSectionLanguages": "YOUR LANGUAGES",
+  "homeSectionModes": "CONVERSATION MODES",
+  "homeLevelBeginner": "Beginner",
+  "homeLevelIntermediate": "Intermediate",
+  "homeLevelAdvanced": "Advanced",
+  "homeLanguageEnglish": "English",
+  "homeLanguageSpanish": "Spanish",
+  "homeComingSoon": "Coming soon",
+  "homeStartButton": "Start conversation · {mode}",
+  "@homeStartButton": {
+    "placeholders": {
+      "mode": { "type": "String" }
+    }
+  },
+
+  "chatHeaderSubtitle": "Aria — AI Tutor",
+  "chatInputHint": "Reply in English...",
+  "chatFreeMessages": "{used} of {total} free messages used today",
+  "@chatFreeMessages": {
+    "placeholders": {
+      "used": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "chatLimitReached": "Daily limit reached. Upgrade to continue!",
+  "chatLimitButton": "See plans",
+  "chatCorrectionLabel": "Quick correction",
+  "chatNewWordsLabel": "New words",
+  "chatErrorTimeout": "Connection timed out. Please try again.",
+  "chatErrorNetwork": "No internet connection. Check your network.",
+  "chatErrorGeneric": "Something went wrong. Please try again.",
+  "chatEmptyTitle": "Hi! I'm Aria, your English tutor.",
+  "chatEmptySubtitle": "Write anything in English to get started!",
+
+  "progressTitle": "Your progress",
+  "progressMessages": "messages sent",
+  "progressWords": "new words",
+  "progressStreak": "day streak",
+  "progressAccuracy": "grammar accuracy",
+  "progressWeeklyChart": "Activity this week",
+  "progressFrequentErrors": "FREQUENT ERRORS",
+  "progressDayMon": "Mon",
+  "progressDayTue": "Tue",
+  "progressDayWed": "Wed",
+  "progressDayThu": "Thu",
+  "progressDayFri": "Fri",
+  "progressDaySat": "Sat",
+  "progressDaySun": "Sun",
+  "progressNoErrors": "No errors recorded yet.",
+  "progressKeepPracticing": "Keep practicing!",
+  "progressOccurrences": "{count, plural, =1{1 occurrence} other{{count} occurrences}}",
+  "@progressOccurrences": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "paywallBadge": "NativeChat Premium",
+  "paywallTitle": "Speak fluently\nwithout limits",
+  "paywallSubtitle": "Unlimited conversations, all modes and advanced AI feedback",
+  "paywallPlanMonthly": "Monthly",
+  "paywallPlanAnnual": "Annual",
+  "paywallPlanPopular": "Most popular",
+  "paywallPlanMonthlyPrice": "R$ 19.90",
+  "paywallPlanMonthlyPeriod": "/ month",
+  "paywallPlanAnnualPrice": "R$ 149",
+  "paywallPlanAnnualPeriod": "/ year",
+  "paywallPlanAnnualSavings": "Equals R$ 12.40/month · Save 38%",
+  "paywallCancelAnytime": "Cancel anytime",
+  "paywallFeature1": "Unlimited conversations with AI",
+  "paywallFeature2": "All conversation modes",
+  "paywallFeature3": "Advanced post-conversation feedback",
+  "paywallFeature4": "Weekly progress report",
+  "paywallFeature5": "Pronunciation practice",
+  "paywallCTA": "Start now",
+  "paywallTrial": "7 days free · No charge until then",
+  "paywallRestore": "Already a subscriber? Restore purchases",
+  "paywallSuccessMessage": "Welcome to Premium! 🎉",
+  "paywallRestoredMessage": "Subscription restored successfully!",
+  "paywallCancelledMessage": "Purchase cancelled.",
+
+  "navHome": "Home",
+  "navChat": "Chat",
+  "navFlashcards": "Flashcards",
+  "navProgress": "Progress",
+  "navPremium": "Premium",
+
+  "flashcardsTitle": "Flashcards",
+  "flashcardsProgress": "{knew} known · {remaining} remaining",
+  "@flashcardsProgress": {
+    "placeholders": {
+      "knew": { "type": "int" },
+      "remaining": { "type": "int" }
+    }
+  },
+  "flashcardsVocabLabel": "VOCABULARY",
+  "flashcardsSeenInChat": "{count, plural, =1{Seen {count} time in chat} other{Seen {count} times in chat}}",
+  "@flashcardsSeenInChat": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "flashcardsTapToReveal": "Tap to see the definition",
+  "flashcardsLoadingDef": "Loading definition…",
+  "flashcardsNoDefinition": "Definition not available.",
+  "flashcardsReviewLater": "Review later",
+  "flashcardsKnew": "I knew it!",
+  "flashcardsDone": "Session complete!",
+  "flashcardsScore": "You got {pct}% of the words",
+  "@flashcardsScore": {
+    "placeholders": {
+      "pct": { "type": "int" }
+    }
+  },
+  "flashcardsKnewLabel": "Knew",
+  "flashcardsReviewLabel": "To review",
+  "flashcardsPlayAgain": "Practice again",
+  "flashcardsEmpty": "No words yet",
+  "flashcardsEmptySubtitle": "Practice in the chat and Aria will highlight words for you to review here.",
+
+  "premiumExclusive": "Premium exclusive",
+  "premiumViewPlans": "View Premium plans",
+
+  "errorUnknown": "Unexpected error. Please try again.",
+  "errorNoConnection": "No internet connection.",
+  "errorTimeout": "Request timed out."
+}
