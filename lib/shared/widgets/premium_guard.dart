@@ -5,6 +5,8 @@ import '../../core/purchases/purchase_provider.dart';
 import '../../features/paywall/paywall_screen.dart';
 import '../theme/app_theme.dart';
 
+import 'package:study_english/l10n/app_localizations.dart';
+
 class PremiumGuard extends ConsumerWidget {
   final Widget child;
   final Widget? fallback;
@@ -35,6 +37,8 @@ class _PremiumLock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Stack(
       children: [
         child,
@@ -61,9 +65,9 @@ class _PremiumLock extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 10),
-                const Text(
-                  'Exclusivo Premium',
-                  style: TextStyle(
+                Text(
+                  l10n.premiumExclusive,
+                  style: const TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w700,
                     color: AppTheme.textPrimary,
@@ -76,9 +80,9 @@ class _PremiumLock extends StatelessWidget {
                       builder: (_) => const PaywallScreen(),
                     ),
                   ),
-                  child: const Text(
-                    'Ver planos Premium',
-                    style: TextStyle(
+                  child: Text(
+                    l10n.premiumViewPlans,
+                    style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
                       color: AppTheme.primary,

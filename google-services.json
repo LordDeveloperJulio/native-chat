@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "817371748592",
+    "project_id": "native-chat-cfaf1",
+    "storage_bucket": "native-chat-cfaf1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:817371748592:android:abcdd40542b6f654478a35",
+        "android_client_info": {
+          "package_name": "com.bytecide.studyenglish.study_english"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBON1x8EJe1TYTyC9DLwR68-MkKUobe4pg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

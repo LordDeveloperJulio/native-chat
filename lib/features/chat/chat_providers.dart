@@ -1,11 +1,11 @@
 // Providers Riverpod para a tela de chat.
-// ChatNotifier coordena: envio de mensagem, chamada à OpenAI, persistência
+// ChatNotifier coordena: envio de mensagem, chamada ao Gemini, persistência
 // no banco, adaptação de nível e controle do limite freemium.
 import 'package:drift/drift.dart' show Value;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/api/gemini_client.dart';
 import '../../core/api/level_adapter.dart';
-import '../../core/api/openai_client.dart';
 import '../../core/api/prompt_builder.dart';
 import '../../core/db/database.dart';
 import '../../core/models/message.dart';
@@ -33,7 +33,7 @@ class ChatState {
     this.error,
   });
 
-  bool get isFreemiumLimitReached => dailyMessageCount >= kFreeMessagesPerDay;
+  bool get isFreemiumLimitReached => false;
 
   ChatState copyWith({
     List<ChatMessage>? messages,
@@ -57,7 +57,7 @@ class ChatState {
 class ChatNotifier extends StateNotifier<ChatState> {
   ChatNotifier({
     required AppDatabase db,
-    required OpenAIClient client,
+    required GeminiClient client,
     required Ref ref,
     required UserProfile user,
   })  : _db = db,
@@ -71,7 +71,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
   }
 
   final AppDatabase _db;
-  final OpenAIClient _client;
+  final GeminiClient _client;
   final Ref _ref;
   final int _userId;
   String _level;
@@ -198,7 +198,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
         isTyping: false,
         recentDifficulties: trimmedDiffs,
       );
-    } on OpenAIException catch (e) {
+    } on GeminiException catch (e) {
       state = state.copyWith(isTyping: false, error: e.message);
     } catch (e) {
       state = state.copyWith(
@@ -213,12 +213,12 @@ class ChatNotifier extends StateNotifier<ChatState> {
 
 // ─── Provider ────────────────────────────────────────────────────────────────
 
-final openAIClientProvider = Provider<OpenAIClient>((_) => OpenAIClient());
+final geminiClientProvider = Provider<GeminiClient>((_) => GeminiClient());
 
 final chatProvider =
     StateNotifierProvider.autoDispose<ChatNotifier, ChatState>((ref) {
   final db = ref.read(databaseProvider);
-  final client = ref.read(openAIClientProvider);
+  final client = ref.read(geminiClientProvider);
   // ref.watch garante que o provider se recria quando userProfileProvider
   // termina de carregar (IndexedStack constrói ChatScreen antes do load).
   final user = ref.watch(userProfileProvider).valueOrNull ??

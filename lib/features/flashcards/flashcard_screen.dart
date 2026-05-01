@@ -7,6 +7,8 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../shared/theme/app_theme.dart';
 import 'flashcard_providers.dart';
 
+import 'package:study_english/l10n/app_localizations.dart';
+
 class FlashcardScreen extends ConsumerStatefulWidget {
   const FlashcardScreen({super.key});
 
@@ -127,6 +129,8 @@ class _TopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
       child: Column(
@@ -136,7 +140,7 @@ class _TopBar extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Flashcards',
+                l10n.flashcardsTitle,
                 style: GoogleFonts.nunito(
                   fontSize: 18,
                   fontWeight: FontWeight.w800,
@@ -144,7 +148,7 @@ class _TopBar extends StatelessWidget {
                 ),
               ),
               Text(
-                '$knewCount conhecidas · $remaining restantes',
+                l10n.flashcardsProgress(knewCount, remaining),
                 style: const TextStyle(
                   fontSize: 12,
                   color: AppTheme.textSecondary,
@@ -225,6 +229,8 @@ class _CardFront extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return _CardShell(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -237,7 +243,7 @@ class _CardFront extends StatelessWidget {
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
-              'VOCABULÁRIO',
+              l10n.flashcardsVocabLabel,
               style: GoogleFonts.nunito(
                 fontSize: 11,
                 fontWeight: FontWeight.w700,
@@ -258,7 +264,7 @@ class _CardFront extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            'Apareceu $seenCount ${seenCount == 1 ? 'vez' : 'vezes'} no chat',
+            l10n.flashcardsSeenInChat(seenCount),
             style: const TextStyle(
               fontSize: 13,
               color: AppTheme.textSecondary,
@@ -267,13 +273,13 @@ class _CardFront extends StatelessWidget {
           const Spacer(),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Icon(Icons.touch_app_outlined,
+            children: [
+              const Icon(Icons.touch_app_outlined,
                   size: 16, color: AppTheme.textSecondary),
-              SizedBox(width: 4),
+              const SizedBox(width: 4),
               Text(
-                'Toque para ver a definição',
-                style: TextStyle(
+                l10n.flashcardsTapToReveal,
+                style: const TextStyle(
                   fontSize: 12,
                   color: AppTheme.textSecondary,
                 ),
@@ -322,22 +328,24 @@ class _CardBack extends StatelessWidget {
           ),
           const Divider(height: 24),
           Expanded(
-            child: _buildDefinitionBody(),
+            child: _buildDefinitionBody(context),
           ),
           const SizedBox(height: 16),
-          _buildAnswerButtons(),
+          _buildAnswerButtons(context),
         ],
       ),
     );
   }
 
-  Widget _buildDefinitionBody() {
+  Widget _buildDefinitionBody(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     if (isLoading) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            SizedBox(
+            const SizedBox(
               width: 28,
               height: 28,
               child: CircularProgressIndicator(
@@ -345,10 +353,10 @@ class _CardBack extends StatelessWidget {
                 color: AppTheme.primary,
               ),
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
             Text(
-              'Carregando definição…',
-              style: TextStyle(
+              l10n.flashcardsLoadingDef,
+              style: const TextStyle(
                 fontSize: 13,
                 color: AppTheme.textSecondary,
               ),
@@ -369,10 +377,10 @@ class _CardBack extends StatelessWidget {
     }
 
     if (definition == null) {
-      return const Center(
+      return Center(
         child: Text(
-          'Definição não disponível.',
-          style: TextStyle(fontSize: 13, color: AppTheme.textSecondary),
+          l10n.flashcardsNoDefinition,
+          style: const TextStyle(fontSize: 13, color: AppTheme.textSecondary),
         ),
       );
     }
@@ -430,7 +438,9 @@ class _CardBack extends StatelessWidget {
     );
   }
 
-  Widget _buildAnswerButtons() {
+  Widget _buildAnswerButtons(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Row(
       children: [
         Expanded(
@@ -446,12 +456,12 @@ class _CardBack extends StatelessWidget {
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Text('↩', style: TextStyle(fontSize: 16)),
-                  SizedBox(width: 6),
+                children: [
+                  const Text('↩', style: TextStyle(fontSize: 16)),
+                  const SizedBox(width: 6),
                   Text(
-                    'Revisar depois',
-                    style: TextStyle(
+                    l10n.flashcardsReviewLater,
+                    style: const TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w700,
                       color: Color(0xFFB91C1C),
@@ -477,12 +487,12 @@ class _CardBack extends StatelessWidget {
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Text('✓', style: TextStyle(fontSize: 16)),
-                  SizedBox(width: 6),
+                children: [
+                  const Text('✓', style: TextStyle(fontSize: 16)),
+                  const SizedBox(width: 6),
                   Text(
-                    'Conhecia!',
-                    style: TextStyle(
+                    l10n.flashcardsKnew,
+                    style: const TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w700,
                       color: AppTheme.primaryDark,
@@ -545,6 +555,7 @@ class _DoneScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final pct = total > 0 ? (knewCount * 100 ~/ total) : 0;
 
     return Scaffold(
@@ -571,7 +582,7 @@ class _DoneScreen extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               Text(
-                'Sessão concluída!',
+                l10n.flashcardsDone,
                 style: GoogleFonts.nunito(
                   fontSize: 22,
                   fontWeight: FontWeight.w800,
@@ -580,7 +591,7 @@ class _DoneScreen extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                'Você acertou $pct% das palavras',
+                l10n.flashcardsScore(pct),
                 style: const TextStyle(
                   fontSize: 15,
                   color: AppTheme.textSecondary,
@@ -592,7 +603,7 @@ class _DoneScreen extends StatelessWidget {
                 children: [
                   _StatPill(
                     emoji: '✓',
-                    label: 'Conhecia',
+                    label: l10n.flashcardsKnewLabel,
                     value: knewCount,
                     color: AppTheme.primaryLight,
                     textColor: AppTheme.primaryDark,
@@ -600,7 +611,7 @@ class _DoneScreen extends StatelessWidget {
                   const SizedBox(width: 12),
                   _StatPill(
                     emoji: '↩',
-                    label: 'A revisar',
+                    label: l10n.flashcardsReviewLabel,
                     value: didntKnowCount,
                     color: const Color(0xFFFEE2E2),
                     textColor: const Color(0xFFB91C1C),
@@ -610,7 +621,7 @@ class _DoneScreen extends StatelessWidget {
               const SizedBox(height: 40),
               ElevatedButton(
                 onPressed: onRestart,
-                child: const Text('Praticar novamente'),
+                child: Text(l10n.flashcardsPlayAgain),
               ),
             ],
           ),
@@ -675,12 +686,14 @@ class _StatPill extends StatelessWidget {
 class _EmptyScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: AppTheme.surface,
       body: SafeArea(
         child: Center(
           child: Padding(
-            padding: const EdgeInsets.all(32),
+            padding: const EdgeInsets.symmetric(horizontal: 28),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -692,32 +705,129 @@ class _EmptyScreen extends StatelessWidget {
                     shape: BoxShape.circle,
                   ),
                   child: const Center(
-                    child: Text('📚',
-                        style: TextStyle(fontSize: 34)),
+                    child: Text('📚', style: TextStyle(fontSize: 34)),
                   ),
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  'Nenhuma palavra ainda',
+                  l10n.flashcardsEmpty,
                   style: GoogleFonts.nunito(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w800,
                     color: AppTheme.textPrimary,
                   ),
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  'Pratique no chat e a Aria vai\ndestacar palavras para você revisar aqui.',
-                  style: GoogleFonts.nunito(
-                    fontSize: 14,
-                    color: AppTheme.textSecondary,
-                    height: 1.5,
+                const SizedBox(height: 28),
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: AppTheme.borderColor, width: 0.5),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.04),
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
                   ),
-                  textAlign: TextAlign.center,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        l10n.flashcardsHowItWorks,
+                        style: GoogleFonts.nunito(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w700,
+                          color: AppTheme.textSecondary,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      _StepRow(
+                        emoji: '💬',
+                        color: const Color(0xFFE0F2FE),
+                        text: l10n.flashcardsStep1,
+                      ),
+                      _StepDivider(),
+                      _StepRow(
+                        emoji: '✨',
+                        color: AppTheme.primaryLight,
+                        text: l10n.flashcardsStep2,
+                      ),
+                      _StepDivider(),
+                      _StepRow(
+                        emoji: '📖',
+                        color: const Color(0xFFF0FDF4),
+                        text: l10n.flashcardsStep3,
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _StepRow extends StatelessWidget {
+  final String emoji;
+  final Color color;
+  final String text;
+
+  const _StepRow({
+    required this.emoji,
+    required this.color,
+    required this.text,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          width: 36,
+          height: 36,
+          decoration: BoxDecoration(
+            color: color,
+            shape: BoxShape.circle,
+          ),
+          child: Center(
+            child: Text(emoji, style: const TextStyle(fontSize: 17)),
+          ),
+        ),
+        const SizedBox(width: 14),
+        Expanded(
+          child: Text(
+            text,
+            style: GoogleFonts.nunito(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: AppTheme.textPrimary,
+              height: 1.3,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _StepDivider extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 17, top: 4, bottom: 4),
+      child: SizedBox(
+        height: 14,
+        child: VerticalDivider(
+          color: AppTheme.borderColor,
+          thickness: 1.5,
+          width: 2,
         ),
       ),
     );

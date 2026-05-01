@@ -169,6 +169,74 @@
   "flashcardsPlayAgain": "Practice again",
   "flashcardsEmpty": "No words yet",
   "flashcardsEmptySubtitle": "Practice in the chat and Aria will highlight words for you to review here.",
+  "flashcardsHowItWorks": "How it works",
+  "flashcardsStep1": "Chat with Aria",
+  "flashcardsStep2": "Aria highlights new vocabulary",
+  "flashcardsStep3": "Review words here as flashcards",
+
+  "deckStudyRemaining": "{remaining, plural, =1{1 card left} other{{remaining} cards left}}",
+  "@deckStudyRemaining": {
+    "placeholders": {
+      "remaining": { "type": "int" }
+    }
+  },
+  "deckStudyQuestion": "QUESTION",
+  "deckStudyHowWasIt": "How was it?",
+  "deckStudyAgain": "Again",
+  "deckStudyHard": "Hard",
+  "deckStudyGood": "Good",
+  "deckStudyEasy": "Easy",
+  "deckStudyAgainSub": "< 1 min",
+  "deckStudyHardSub": "6 min",
+  "deckStudyGoodSub": "10 min",
+  "deckStudyEasySub": "4 days",
+  "deckStudyTapToReveal": "Tap to reveal",
+  "deckStudyDoneTitle": "Session complete!",
+  "deckStudyUpToDateTitle": "All caught up!",
+  "deckStudyDoneBody": "You reviewed {count} cards in this session.",
+  "@deckStudyDoneBody": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "deckStudyNoDueCards": "No cards due for review right now. Come back later!",
+  "deckStudyBackButton": "Back to deck",
+
+  "decksTitle": "My Decks",
+  "decksSubtitle": "Review and study your flashcard decks",
+  "decksCardCount": "{count, plural, =1{1 card} other{{count} cards}}",
+  "@decksCardCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "decksDueCount": "{count, plural, =1{1 due} other{{count} due}}",
+  "@decksDueCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "decksUpToDate": "Up to date",
+  "decksDeleteTitle": "Delete deck?",
+  "decksDeleteBody": "Delete \"{title}\" with {count} cards? This can't be undone.",
+  "@decksDeleteBody": {
+    "placeholders": {
+      "count": { "type": "int" },
+      "title": { "type": "String" }
+    }
+  },
+  "decksDeleteCancel": "Cancel",
+  "decksDeleteConfirm": "Delete",
+  "decksEmptyTitle": "No decks yet",
+  "decksEmptyBody": "Create a deck and I'll generate flashcards on any English topic for you.",
+  "decksEmptyButton": "Create first deck",
+  "decksGenerateError": "Failed to generate deck. Please try again.",
+  "decksNewDeckTitle": "New deck",
+  "decksNewDeckSubtitle": "Choose a topic and I'll create flashcards for you",
+  "decksTopicHint": "e.g. Past Simple, Phrasal Verbs…",
+  "decksHowManyCards": "HOW MANY CARDS?",
+  "decksCardsUnit": "cards",
+  "decksGenerateButton": "Generate deck",
 
   "premiumExclusive": "Premium exclusive",
   "premiumViewPlans": "View Premium plans",

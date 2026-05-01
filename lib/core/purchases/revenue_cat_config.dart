@@ -1,5 +1,5 @@
-const String appleApiKey = 'appl_XXXXXXXXXXXXXXXX';
-const String googleApiKey = 'goog_XXXXXXXXXXXXXXXX';
-const String entitlementId = 'premium';
-const String monthlyProductId = 'lingua_monthly';
-const String annualProductId = 'lingua_annual';
+const String appleApiKey = 'test_VblSZdHuzrczxKDoqGhCPJKdiCz';
+const String googleApiKey = 'test_VblSZdHuzrczxKDoqGhCPJKdiCz';
+const String entitlementId = 'native-chat Pro';
+const String monthlyProductId = 'monthly';
+const String annualProductId = 'yearly';

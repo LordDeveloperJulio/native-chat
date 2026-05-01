@@ -9,7 +9,7 @@ import 'package:path_provider/path_provider.dart';
 
 part 'database.g.dart';
 
-// ─── Tabelas ────────────────────────────────────────────────────────────────
+// ─── Tabelas ─────────────────────────────────────────────────────────────────
 
 @DataClassName('DbUser')
 class Users extends Table {
@@ -56,6 +56,30 @@ class NewWords extends Table {
   TextColumn get definition => text().nullable()();
 }
 
+// v3: decks de flashcards criados pelo usuário com tema escolhido
+@DataClassName('DbFlashcardDeck')
+class FlashcardDecks extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get userId => integer()();
+  TextColumn get title => text()();
+  IntColumn get totalCards => integer()();
+  DateTimeColumn get createdAt =>
+      dateTime().withDefault(currentDateAndTime)();
+}
+
+// v3: cards individuais com dados do algoritmo SM-2
+@DataClassName('DbFlashcardItem')
+class FlashcardItems extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get deckId => integer()();
+  TextColumn get front => text()();
+  TextColumn get back => text()();
+  IntColumn get repetitions => integer().withDefault(const Constant(0))();
+  RealColumn get easeFactor => real().withDefault(const Constant(2.5))();
+  IntColumn get intervalDays => integer().withDefault(const Constant(1))();
+  DateTimeColumn get nextReview => dateTime().nullable()();
+}
+
 // ─── Conexão ────────────────────────────────────────────────────────────────
 
 LazyDatabase _openConnection() {
@@ -68,18 +92,22 @@ LazyDatabase _openConnection() {
 
 // ─── Database ───────────────────────────────────────────────────────────────
 
-@DriftDatabase(tables: [Users, Messages, Corrections, NewWords])
+@DriftDatabase(tables: [Users, Messages, Corrections, NewWords, FlashcardDecks, FlashcardItems])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
     onUpgrade: (migrator, from, to) async {
       if (from < 2) {
         await migrator.addColumn(newWords, newWords.definition);
+      }
+      if (from < 3) {
+        await migrator.createTable(flashcardDecks);
+        await migrator.createTable(flashcardItems);
       }
     },
   );
@@ -210,6 +238,59 @@ class AppDatabase extends _$AppDatabase {
   Future<void> cacheWordDefinition(int wordId, String definition) =>
       (update(newWords)..where((w) => w.id.equals(wordId)))
           .write(NewWordsCompanion(definition: Value<String?>(definition)));
+
+  // ── Decks de flashcards ────────────────────────────────────────────────────
+
+  Future<List<DbFlashcardDeck>> getDecksForUser(int userId) =>
+      (select(flashcardDecks)
+            ..where((d) => d.userId.equals(userId))
+            ..orderBy([(d) => OrderingTerm.desc(d.createdAt)]))
+          .get();
+
+  Future<int> insertDeck(FlashcardDecksCompanion deck) =>
+      into(flashcardDecks).insert(deck);
+
+  Future<void> insertFlashcardItems(List<FlashcardItemsCompanion> items) async {
+    await batch((b) => b.insertAll(flashcardItems, items));
+  }
+
+  Future<List<DbFlashcardItem>> getDeckItems(int deckId) =>
+      (select(flashcardItems)..where((i) => i.deckId.equals(deckId))).get();
+
+  Future<List<DbFlashcardItem>> getDueItems(int deckId) {
+    final now = DateTime.now();
+    return (select(flashcardItems)
+          ..where((i) =>
+              i.deckId.equals(deckId) &
+              (i.nextReview.isNull() | i.nextReview.isSmallerOrEqualValue(now))))
+        .get();
+  }
+
+  Future<int> getDueCount(int deckId) async {
+    final items = await getDueItems(deckId);
+    return items.length;
+  }
+
+  Future<void> updateItemSRS({
+    required int id,
+    required int repetitions,
+    required double easeFactor,
+    required int intervalDays,
+    required DateTime nextReview,
+  }) =>
+      (update(flashcardItems)..where((i) => i.id.equals(id))).write(
+        FlashcardItemsCompanion(
+          repetitions: Value(repetitions),
+          easeFactor: Value(easeFactor),
+          intervalDays: Value(intervalDays),
+          nextReview: Value(nextReview),
+        ),
+      );
+
+  Future<void> deleteDeck(int deckId) async {
+    await (delete(flashcardItems)..where((i) => i.deckId.equals(deckId))).go();
+    await (delete(flashcardDecks)..where((d) => d.id.equals(deckId))).go();
+  }
 
   // ── Progresso semanal ──────────────────────────────────────────────────────
 

@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../core/purchases/purchase_provider.dart';
 import '../../shared/theme/app_theme.dart';
 import '../home/home_providers.dart';
-import '../paywall/paywall_screen.dart';
 import 'chat_providers.dart';
 import 'widgets/correction_card.dart';
 import 'widgets/message_bubble.dart';
 import 'widgets/typing_indicator.dart';
+
+import 'package:study_english/l10n/app_localizations.dart';
 
 class ChatScreen extends ConsumerStatefulWidget {
   const ChatScreen({super.key});
@@ -49,18 +49,28 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     _scrollToBottom();
   }
 
+  String _localizedModeDisplay(AppLocalizations l10n, String? mode) {
+    switch (mode) {
+      case 'casual':
+        return l10n.modeCasual;
+      case 'business':
+        return l10n.modeBusiness;
+      case 'travel':
+        return l10n.modeTravel;
+      case 'interview':
+        return l10n.modeInterview;
+      default:
+        return l10n.modeCasual;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final state = ref.watch(chatProvider);
     final userAsync = ref.watch(userProfileProvider);
-    final modeDisplay = userAsync.valueOrNull?.modeDisplay ?? 'Casual';
-    final isPremium = ref.watch(isPremiumProvider).valueOrNull ?? false;
-
-    // Mantém o notifier ciente do status premium para liberar limite
-    ref.listen<AsyncValue<bool>>(isPremiumProvider, (_, next) {
-      ref.read(chatProvider.notifier).setIsPremium(next.valueOrNull ?? false);
-    });
-
+    final modeDisplay = _localizedModeDisplay(
+        l10n, userAsync.valueOrNull?.currentMode);
     ref.listen(chatProvider, (prev, next) {
       if (next.error != null && next.error != prev?.error) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -97,14 +107,10 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                     scrollController: _scrollCtrl,
                   ),
           ),
-          if (!isPremium && state.isFreemiumLimitReached) _FreemiumBanner(),
           _InputBar(
             controller: _textCtrl,
-            enabled: !state.isTyping &&
-                (isPremium || !state.isFreemiumLimitReached),
+            enabled: !state.isTyping,
             onSend: _send,
-            used: state.dailyMessageCount,
-            total: kFreeMessagesPerDay,
           ),
         ],
       ),
@@ -121,6 +127,7 @@ class _ChatHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final canPop = Navigator.of(context).canPop();
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -157,7 +164,7 @@ class _ChatHeader extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Aria — Tutora IA',
+                      l10n.chatHeaderSubtitle,
                       style: GoogleFonts.nunito(
                         fontSize: 14,
                         fontWeight: FontWeight.w700,
@@ -221,6 +228,7 @@ class _MessageList extends StatelessWidget {
             if (showCard)
               CorrectionCard(
                 correction: msg.aiResponse?.correction ?? '',
+                grammarNote: msg.aiResponse?.grammarNote,
                 newWords: msg.aiResponse?.newWords ?? [],
               ),
           ],
@@ -236,19 +244,16 @@ class _InputBar extends StatelessWidget {
   final TextEditingController controller;
   final bool enabled;
   final VoidCallback onSend;
-  final int used;
-  final int total;
 
   const _InputBar({
     required this.controller,
     required this.enabled,
     required this.onSend,
-    required this.used,
-    required this.total,
   });
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       color: AppTheme.surface,
       child: SafeArea(
@@ -258,15 +263,6 @@ class _InputBar extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                '$used de $total mensagens gratuitas usadas hoje',
-                style: const TextStyle(
-                  fontSize: 11,
-                  color: AppTheme.textSecondary,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 8),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
@@ -278,9 +274,9 @@ class _InputBar extends StatelessWidget {
                       maxLines: 4,
                       minLines: 1,
                       style: const TextStyle(fontSize: 14),
-                      decoration: const InputDecoration(
-                        hintText: 'Digite em inglês…',
-                        hintStyle: TextStyle(color: AppTheme.textSecondary),
+                      decoration: InputDecoration(
+                        hintText: l10n.chatInputHint,
+                        hintStyle: const TextStyle(color: AppTheme.textSecondary),
                       ),
                       onSubmitted: enabled ? (_) => onSend() : null,
                     ),
@@ -313,51 +309,6 @@ class _InputBar extends StatelessWidget {
   }
 }
 
-// ─── Banner de limite ─────────────────────────────────────────────────────────
-
-class _FreemiumBanner extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
-      decoration: BoxDecoration(
-        color: AppTheme.correctionBg,
-        borderRadius: BorderRadius.circular(10),
-        border:
-            Border.all(color: AppTheme.correctionBorder, width: 0.5),
-      ),
-      child: Row(
-        children: [
-          const Icon(Icons.lock_outline,
-              color: Color(0xFF7D4A00), size: 18),
-          const SizedBox(width: 10),
-          const Expanded(
-            child: Text(
-              'Limite diário atingido. Assine o Premium para conversas ilimitadas!',
-              style: TextStyle(
-                  fontSize: 12, color: Color(0xFF7D4A00)),
-            ),
-          ),
-          GestureDetector(
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => const PaywallScreen()),
-            ),
-            child: const Text(
-              'Ver planos',
-              style: TextStyle(
-                color: AppTheme.primary,
-                fontWeight: FontWeight.w700,
-                fontSize: 12,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 // ─── Estado vazio ─────────────────────────────────────────────────────────────
 
 class _EmptyState extends StatelessWidget {
@@ -365,6 +316,8 @@ class _EmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -384,7 +337,7 @@ class _EmptyState extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             Text(
-              'Olá! Sou a Aria, sua tutora de inglês.',
+              l10n.chatEmptyTitle,
               style: GoogleFonts.nunito(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
@@ -394,7 +347,7 @@ class _EmptyState extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'Escreva qualquer coisa em inglês para começarmos!',
+              l10n.chatEmptySubtitle,
               style: GoogleFonts.nunito(
                 fontSize: 14,
                 color: AppTheme.textSecondary,

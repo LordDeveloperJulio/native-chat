@@ -2,20 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
-  static const Color primary = Color(0xFF1D9E75);
-  static const Color primaryLight = Color(0xFFE1F5EE);
-  static const Color primaryDark = Color(0xFF0F6E56);
+  static const Color primary = Color(0xFF6C63FF);
+  static const Color primaryLight = Color(0xFFEDEBFF);
+  static const Color primaryDark = Color(0xFF4B44CC);
   static const Color surface = Color(0xFFFFFFFF);
   static const Color cardBackground = Color(0xFFFFFFFF);
   static const Color cardSurface = Color(0xFFF5F5F5);
   static const Color borderColor = Color(0xFFE5E7EB);
   static const Color textPrimary = Color(0xFF1A2233);
   static const Color textSecondary = Color(0xFF6B7280);
-  static const Color userBubble = Color(0xFF1D9E75);
+  static const Color userBubble = Color(0xFF6C63FF);
   static const Color aiBubble = Color(0xFFF5F5F5);
-  static const Color correctionBg = Color(0xFFFAEEDA);
-  static const Color correctionBorder = Color(0xFFFAC775);
-  static const Color correctionText = Color(0xFF7D4A00);
+  static const Color correctionBg = Color(0xFFFFF8E0);
+  static const Color correctionBorder = Color(0xFFE6C200);
+  static const Color correctionText = Color(0xFF6B4A00);
   static const Color error = Color(0xFFE53E3E);
 
   static ThemeData get light {

@@ -6,34 +6,54 @@ import '../../shared/theme/app_theme.dart';
 import '../chat/chat_screen.dart';
 import 'home_providers.dart';
 
+import 'package:study_english/l10n/app_localizations.dart';
+
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
-  static const List<_ModeOption> _modes = [
-    _ModeOption('casual', 'Casual', '💬', 'Bate-papo do dia a dia',
-        Color(0xFFE1F5EE)),
-    _ModeOption('business', 'Negócios', '💼', 'Comunicação profissional',
-        Color(0xFFE6F1FB)),
+  static List<_ModeOption> _getModes(AppLocalizations l10n) => [
     _ModeOption(
-        'travel', 'Viagem', '✈️', 'Situações de viagem', Color(0xFFFAEEDA)),
-    _ModeOption('interview', 'Entrevista', '🎯', 'Preparo para entrevistas',
-        Color(0xFFFAECE7)),
+      'casual',
+      l10n.modeCasual,
+      '💬',
+      l10n.modeCasualSubtitle,
+      const Color(0xFFEDEBFF),
+    ),
+    _ModeOption(
+      'business',
+      l10n.modeBusiness,
+      '💼',
+      l10n.modeBusinessSubtitle,
+      const Color(0xFFE8EEFF),
+    ),
+    _ModeOption(
+      'travel',
+      l10n.modeTravel,
+      '✈️',
+      l10n.modeTravelSubtitle,
+      const Color(0xFFFFF8E0),
+    ),
+    _ModeOption(
+      'interview',
+      l10n.modeInterview,
+      '🎯',
+      l10n.modeInterviewSubtitle,
+      const Color(0xFFF3EEFF),
+    ),
   ];
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final userAsync = ref.watch(userProfileProvider);
 
     return userAsync.when(
-      loading: () => const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      ),
-      error: (e, _) => Scaffold(
-        body: Center(child: Text('Erro: $e')),
-      ),
+      loading: () =>
+          const Scaffold(body: Center(child: CircularProgressIndicator())),
+      error: (e, _) => Scaffold(body: Center(child: Text('Erro: $e'))),
       data: (user) {
         if (user == null) return const SizedBox.shrink();
-        return _HomeContent(user: user, modes: _modes);
+        return _HomeContent(user: user, modes: _getModes(l10n));
       },
     );
   }
@@ -45,15 +65,37 @@ class _HomeContent extends ConsumerWidget {
 
   const _HomeContent({required this.user, required this.modes});
 
-  String _greeting() {
-    final hour = DateTime.now().hour;
-    if (hour < 12) return 'Bom dia';
-    if (hour < 18) return 'Boa tarde';
-    return 'Boa noite';
+  String _localizedLevelLabel(AppLocalizations l10n, String level) {
+    switch (level) {
+      case 'beginner':
+        return l10n.homeLevelBeginner;
+      case 'intermediate':
+        return l10n.homeLevelIntermediate;
+      case 'advanced':
+        return l10n.homeLevelAdvanced;
+      default:
+        return level;
+    }
+  }
+
+  String _localizedModeLabel(AppLocalizations l10n, String mode) {
+    switch (mode) {
+      case 'casual':
+        return l10n.modeCasual;
+      case 'business':
+        return l10n.modeBusiness;
+      case 'travel':
+        return l10n.modeTravel;
+      case 'interview':
+        return l10n.modeInterview;
+      default:
+        return mode;
+    }
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final selectedMode = user.currentMode as String;
 
     return Scaffold(
@@ -65,19 +107,19 @@ class _HomeContent extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 20),
-              _buildHeader(context),
+              _buildHeader(context, l10n),
               const SizedBox(height: 20),
-              _buildStreakCard(),
+              _buildStreakCard(l10n),
               const SizedBox(height: 24),
-              _buildSectionLabel(context, 'Seus idiomas'),
+              _buildSectionLabel(l10n.homeSectionLanguages),
               const SizedBox(height: 10),
-              _buildLanguageGrid(context),
+              _buildLanguageGrid(context, l10n),
               const SizedBox(height: 24),
-              _buildSectionLabel(context, 'Modos de conversa'),
+              _buildSectionLabel(l10n.homeSectionModes),
               const SizedBox(height: 10),
               _buildModeList(context, ref, selectedMode),
               const SizedBox(height: 24),
-              _buildStartButton(context, ref),
+              _buildStartButton(context, ref, l10n),
               const SizedBox(height: 24),
             ],
           ),
@@ -86,12 +128,19 @@ class _HomeContent extends ConsumerWidget {
     );
   }
 
-  Widget _buildHeader(BuildContext context) {
+  Widget _buildHeader(BuildContext context, AppLocalizations l10n) {
+    final hour = DateTime.now().hour;
+    final greeting = hour < 12
+        ? l10n.homeGreeting(user.name as String)
+        : hour < 18
+        ? l10n.homeGreetingAfternoon(user.name as String)
+        : l10n.homeGreetingEvening(user.name as String);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '${_greeting()}, ${user.name}',
+          greeting,
           style: GoogleFonts.nunito(
             fontSize: 13,
             color: AppTheme.textSecondary,
@@ -100,7 +149,7 @@ class _HomeContent extends ConsumerWidget {
         ),
         const SizedBox(height: 2),
         Text(
-          'Vamos praticar hoje?',
+          l10n.homeTitle,
           style: GoogleFonts.nunito(
             fontSize: 20,
             fontWeight: FontWeight.w800,
@@ -111,7 +160,7 @@ class _HomeContent extends ConsumerWidget {
     );
   }
 
-  Widget _buildStreakCard() {
+  Widget _buildStreakCard(AppLocalizations l10n) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -134,7 +183,7 @@ class _HomeContent extends ConsumerWidget {
               ),
               const SizedBox(height: 2),
               Text(
-                'dias seguidos',
+                l10n.homeStreakLabel,
                 style: TextStyle(
                   color: Colors.white.withValues(alpha: 0.85),
                   fontSize: 12,
@@ -160,9 +209,9 @@ class _HomeContent extends ConsumerWidget {
     );
   }
 
-  Widget _buildSectionLabel(BuildContext context, String label) {
+  Widget _buildSectionLabel(String label) {
     return Text(
-      label.toUpperCase(),
+      label,
       style: GoogleFonts.nunito(
         fontSize: 13,
         color: AppTheme.textSecondary,
@@ -185,52 +234,56 @@ class _HomeContent extends ConsumerWidget {
     }
   }
 
-  Widget _buildLanguageGrid(BuildContext context) {
+  Widget _buildLanguageGrid(BuildContext context, AppLocalizations l10n) {
     return Row(
       children: [
-        Expanded(child: _LanguageCard(
-          flag: '🇺🇸',
-          language: 'Inglês',
-          level: user.levelDisplay as String,
-          progress: _levelProgress(),
-        )),
-        const SizedBox(width: 10),
-        Expanded(child: _LanguageCard(
-          flag: '🇪🇸',
-          language: 'Espanhol',
-          level: 'Em breve',
-          progress: 0,
-          disabled: true,
-        )),
+        Expanded(
+          child: _LanguageCard(
+            flag: '🇺🇸',
+            language: l10n.homeLanguageEnglish,
+            level: _localizedLevelLabel(l10n, user.level as String),
+            progress: _levelProgress(),
+          ),
+        ),
       ],
     );
   }
 
   Widget _buildModeList(
-      BuildContext context, WidgetRef ref, String selectedMode) {
+    BuildContext context,
+    WidgetRef ref,
+    String selectedMode,
+  ) {
     return Column(
       children: modes
-          .map((m) => _ModeCard(
-                option: m,
-                isSelected: selectedMode == m.key,
-                onTap: () =>
-                    ref.read(userProfileProvider.notifier).updateMode(m.key),
-              ))
+          .map(
+            (m) => _ModeCard(
+              option: m,
+              isSelected: selectedMode == m.key,
+              onTap: () =>
+                  ref.read(userProfileProvider.notifier).updateMode(m.key),
+            ),
+          )
           .toList(),
     );
   }
 
-  Widget _buildStartButton(BuildContext context, WidgetRef ref) {
+  Widget _buildStartButton(
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations l10n,
+  ) {
+    final modeLabel = _localizedModeLabel(l10n, user.currentMode as String);
     return ElevatedButton(
       onPressed: () async {
         await ref.read(userProfileProvider.notifier).recordSession();
         if (context.mounted) {
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (_) => const ChatScreen()),
-          );
+          Navigator.of(
+            context,
+          ).push(MaterialPageRoute(builder: (_) => const ChatScreen()));
         }
       },
-      child: Text('Iniciar conversa · ${user.modeDisplay}'),
+      child: Text(l10n.homeStartButton(modeLabel)),
     );
   }
 }
@@ -257,9 +310,7 @@ class _LanguageCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(14, 14, 14, 10),
       decoration: BoxDecoration(
-        color: disabled
-            ? AppTheme.cardSurface
-            : AppTheme.cardSurface,
+        color: AppTheme.cardSurface,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -272,18 +323,13 @@ class _LanguageCard extends StatelessWidget {
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w700,
-              color: disabled
-                  ? AppTheme.textSecondary
-                  : AppTheme.textPrimary,
+              color: disabled ? AppTheme.textSecondary : AppTheme.textPrimary,
             ),
           ),
           const SizedBox(height: 2),
           Text(
             level,
-            style: const TextStyle(
-              fontSize: 12,
-              color: AppTheme.textSecondary,
-            ),
+            style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary),
           ),
           const SizedBox(height: 8),
           ClipRRect(
@@ -328,8 +374,7 @@ class _ModeCard extends StatelessWidget {
           color: AppTheme.cardBackground,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color:
-                isSelected ? AppTheme.primary : AppTheme.borderColor,
+            color: isSelected ? AppTheme.primary : AppTheme.borderColor,
             width: isSelected ? 1.5 : 0.5,
           ),
         ),
@@ -339,14 +384,11 @@ class _ModeCard extends StatelessWidget {
               width: 36,
               height: 36,
               decoration: BoxDecoration(
-                color: isSelected
-                    ? AppTheme.primaryLight
-                    : option.bgColor,
+                color: isSelected ? AppTheme.primaryLight : option.bgColor,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Center(
-                child: Text(option.emoji,
-                    style: const TextStyle(fontSize: 18)),
+                child: Text(option.emoji, style: const TextStyle(fontSize: 18)),
               ),
             ),
             const SizedBox(width: 12),
@@ -378,9 +420,7 @@ class _ModeCard extends StatelessWidget {
             Icon(
               Icons.chevron_right,
               size: 18,
-              color: isSelected
-                  ? AppTheme.primary
-                  : AppTheme.textSecondary,
+              color: isSelected ? AppTheme.primary : AppTheme.textSecondary,
             ),
           ],
         ),
@@ -397,5 +437,10 @@ class _ModeOption {
   final Color bgColor;
 
   const _ModeOption(
-      this.key, this.label, this.emoji, this.description, this.bgColor);
+    this.key,
+    this.label,
+    this.emoji,
+    this.description,
+    this.bgColor,
+  );
 }

@@ -1,7 +1,7 @@
 import 'package:drift/drift.dart' show Value;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../core/api/openai_client.dart';
+import '../../core/api/gemini_client.dart';
 import '../../core/db/database.dart';
 import '../home/home_providers.dart';
 
@@ -55,7 +55,7 @@ class FlashcardState {
 class FlashcardNotifier extends StateNotifier<FlashcardState> {
   FlashcardNotifier({
     required AppDatabase db,
-    required OpenAIClient client,
+    required GeminiClient client,
     required int userId,
   })  : _db = db,
         _client = client,
@@ -65,7 +65,7 @@ class FlashcardNotifier extends StateNotifier<FlashcardState> {
   }
 
   final AppDatabase _db;
-  final OpenAIClient _client;
+  final GeminiClient _client;
   final int _userId;
 
   Future<void> _load() async {
@@ -99,7 +99,7 @@ class FlashcardNotifier extends StateNotifier<FlashcardState> {
         deck: updatedDeck,
         isLoadingDefinition: false,
       );
-    } on OpenAIException catch (e) {
+    } on GeminiException catch (e) {
       state = state.copyWith(
         isLoadingDefinition: false,
         error: e.message,
@@ -142,9 +142,9 @@ class FlashcardNotifier extends StateNotifier<FlashcardState> {
 final flashcardProvider =
     StateNotifierProvider.autoDispose<FlashcardNotifier, FlashcardState>((ref) {
   final db = ref.read(databaseProvider);
-  final client = ref.read(_openAIClientProvider);
+  final client = ref.read(_geminiClientProvider);
   final userId = ref.read(userProfileProvider).valueOrNull?.id ?? 0;
   return FlashcardNotifier(db: db, client: client, userId: userId);
 });
 
-final _openAIClientProvider = Provider<OpenAIClient>((_) => OpenAIClient());
+final _geminiClientProvider = Provider<GeminiClient>((_) => GeminiClient());

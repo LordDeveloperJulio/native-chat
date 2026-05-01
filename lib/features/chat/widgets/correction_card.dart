@@ -2,18 +2,23 @@ import 'package:flutter/material.dart';
 
 import '../../../shared/theme/app_theme.dart';
 
+import 'package:study_english/l10n/app_localizations.dart';
+
 class CorrectionCard extends StatelessWidget {
   final String correction;
+  final String? grammarNote;
   final List<String> newWords;
 
   const CorrectionCard({
     super.key,
     required this.correction,
+    this.grammarNote,
     required this.newWords,
   });
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final hasCorrectionText = correction.isNotEmpty;
     final hasWords = newWords.isNotEmpty;
 
@@ -36,12 +41,12 @@ class CorrectionCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (hasCorrectionText) ...[
-              const Text(
-                'Pequena correção',
-                style: TextStyle(
+              Text(
+                l10n.chatCorrectionLabel,
+                style: const TextStyle(
                   fontWeight: FontWeight.w700,
                   fontSize: 12,
-                  color: Color(0xFF7D4A00),
+                  color: AppTheme.correctionText,
                 ),
               ),
               const SizedBox(height: 6),
@@ -79,12 +84,24 @@ class CorrectionCard extends StatelessWidget {
                   ),
                 ],
               ),
+              if (grammarNote != null && grammarNote!.isNotEmpty) ...[
+                const SizedBox(height: 6),
+                Text(
+                  grammarNote!,
+                  style: const TextStyle(
+                    fontSize: 11,
+                    color: AppTheme.correctionText,
+                    fontStyle: FontStyle.italic,
+                    height: 1.4,
+                  ),
+                ),
+              ],
             ],
             if (hasCorrectionText && hasWords) const SizedBox(height: 8),
             if (hasWords) ...[
-              const Text(
-                'Palavras novas',
-                style: TextStyle(
+              Text(
+                l10n.chatNewWordsLabel,
+                style: const TextStyle(
                   fontWeight: FontWeight.w700,
                   fontSize: 12,
                   color: AppTheme.primary,

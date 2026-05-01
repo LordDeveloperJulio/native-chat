@@ -9,6 +9,8 @@ import '../../shared/theme/app_theme.dart';
 import '../../shared/widgets/premium_guard.dart';
 import 'progress_providers.dart';
 
+import 'package:study_english/l10n/app_localizations.dart';
+
 class ProgressScreen extends ConsumerWidget {
   const ProgressScreen({super.key});
 
@@ -48,6 +50,8 @@ class _ProgressContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return RefreshIndicator(
       onRefresh: () async {},
       child: ListView(
@@ -55,7 +59,7 @@ class _ProgressContent extends StatelessWidget {
         children: [
           const SizedBox(height: 20),
           Text(
-            'Seu progresso',
+            l10n.progressTitle,
             style: GoogleFonts.nunito(
               fontSize: 18,
               fontWeight: FontWeight.w700,
@@ -88,11 +92,12 @@ class _StatsGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final stats = [
-      _StatItem('${data.totalMessages}', 'Mensagens'),
-      _StatItem('${data.totalNewWords}', 'Palavras novas'),
-      _StatItem('${data.streak}', 'Dias seguidos'),
-      _StatItem('$grammarPercent%', '% gramática'),
+      _StatItem('${data.totalMessages}', l10n.progressMessages),
+      _StatItem('${data.totalNewWords}', l10n.progressWords),
+      _StatItem('${data.streak}', l10n.progressStreak),
+      _StatItem('$grammarPercent%', l10n.progressAccuracy),
     ];
 
     return GridView.count(
@@ -160,16 +165,23 @@ class _WeeklyChart extends StatelessWidget {
 
   const _WeeklyChart({required this.weeklyMessages});
 
-  static const _ptDays = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
-
-  String _dayLabel(DateTime date) => _ptDays[date.weekday % 7];
-
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final days = [
+      l10n.progressDaySun,
+      l10n.progressDayMon,
+      l10n.progressDayTue,
+      l10n.progressDayWed,
+      l10n.progressDayThu,
+      l10n.progressDayFri,
+      l10n.progressDaySat,
+    ];
+
     final entries = weeklyMessages.entries.toList()
       ..sort((a, b) => a.key.compareTo(b.key));
 
-    final dayLabels = entries.map((e) => _dayLabel(e.key)).toList();
+    final dayLabels = entries.map((e) => days[e.key.weekday % 7]).toList();
     final maxY = entries
             .map((e) => e.value)
             .fold(0, (prev, v) => v > prev ? v : prev)
@@ -204,7 +216,7 @@ class _WeeklyChart extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Conversas esta semana',
+            l10n.progressWeeklyChart,
             style: GoogleFonts.nunito(
               fontSize: 13,
               fontWeight: FontWeight.w700,
@@ -293,6 +305,7 @@ class _CorrectionsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final visible =
         isPremium ? corrections : corrections.take(_freeLimit).toList();
     final hasLocked = !isPremium && corrections.length > _freeLimit;
@@ -301,7 +314,7 @@ class _CorrectionsList extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'ERROS FREQUENTES',
+          l10n.progressFrequentErrors,
           style: GoogleFonts.nunito(
             fontSize: 13,
             color: AppTheme.textSecondary,
@@ -332,6 +345,8 @@ class _CorrectionsList extends StatelessWidget {
 class _EmptyCorrections extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
@@ -354,13 +369,13 @@ class _EmptyCorrections extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             Text(
-              'Nenhum erro registrado ainda.',
+              l10n.progressNoErrors,
               style: GoogleFonts.nunito(
                   fontSize: 13, color: AppTheme.textSecondary),
             ),
             const SizedBox(height: 2),
             Text(
-              'Continue praticando!',
+              l10n.progressKeepPracticing,
               style: GoogleFonts.nunito(
                   fontSize: 13, color: AppTheme.textSecondary),
             ),
@@ -378,6 +393,7 @@ class _CorrectionItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final isFrequent = correction.count >= 3;
 
     return Container(
@@ -416,7 +432,7 @@ class _CorrectionItem extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            '${correction.count} ocorrência${correction.count != 1 ? 's' : ''}',
+            l10n.progressOccurrences(correction.count),
             style: const TextStyle(
               fontSize: 11,
               color: AppTheme.textSecondary,

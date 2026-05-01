@@ -9,6 +9,8 @@ import '../../shared/theme/app_theme.dart';
 import '../home/home_providers.dart';
 import '../main/main_screen.dart';
 
+import 'package:study_english/l10n/app_localizations.dart';
+
 class OnboardingScreen extends ConsumerStatefulWidget {
   const OnboardingScreen({super.key});
 
@@ -83,8 +85,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       setState(() => _isLoading = false);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Erro ao salvar seus dados. Tente novamente.'),
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.errorUnknown),
             backgroundColor: Colors.red,
           ),
         );
@@ -94,6 +96,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: AppTheme.surface,
       body: SafeArea(
@@ -137,7 +141,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                         ),
                       )
                     : Text(
-                        _currentPage == 2 ? 'Começar agora!' : 'Continuar',
+                        _currentPage == 2
+                            ? l10n.onboardingPage3Button
+                            : l10n.onboardingPage1Button,
                       ),
               ),
             ),
@@ -189,6 +195,8 @@ class _NamePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
@@ -198,7 +206,7 @@ class _NamePage extends StatelessWidget {
           const Center(child: Text('🌍', style: TextStyle(fontSize: 64))),
           const SizedBox(height: 32),
           Text(
-            'Olá! Como você se chama?',
+            l10n.onboardingPage1Title,
             style: GoogleFonts.nunito(
               fontSize: 24,
               fontWeight: FontWeight.w800,
@@ -208,7 +216,7 @@ class _NamePage extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'Vou usar seu nome para personalizar\nsua experiência',
+            l10n.onboardingPage1Subtitle,
             style: GoogleFonts.nunito(
               fontSize: 14,
               color: AppTheme.textSecondary,
@@ -221,7 +229,7 @@ class _NamePage extends StatelessWidget {
             onChanged: (_) => onChanged(),
             textCapitalization: TextCapitalization.words,
             decoration: InputDecoration(
-              labelText: 'Seu nome',
+              labelText: l10n.onboardingPage1FieldLabel,
               filled: true,
               fillColor: AppTheme.cardSurface,
               border: OutlineInputBorder(
@@ -259,6 +267,8 @@ class _LevelPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
@@ -268,7 +278,7 @@ class _LevelPage extends StatelessWidget {
           const Center(child: Text('📊', style: TextStyle(fontSize: 64))),
           const SizedBox(height: 32),
           Text(
-            'Qual é seu nível de inglês?',
+            l10n.onboardingPage2Title,
             style: GoogleFonts.nunito(
               fontSize: 24,
               fontWeight: FontWeight.w800,
@@ -279,24 +289,24 @@ class _LevelPage extends StatelessWidget {
           const SizedBox(height: 32),
           _SelectableCard(
             emoji: '🌱',
-            label: 'Iniciante',
-            description: 'Estou começando agora',
+            label: l10n.levelBeginner,
+            description: l10n.levelBeginnerSubtitle,
             isSelected: selected == 'beginner',
             onTap: () => onSelect('beginner'),
           ),
           const SizedBox(height: 10),
           _SelectableCard(
             emoji: '📈',
-            label: 'Intermediário',
-            description: 'Já conheço o básico',
+            label: l10n.levelIntermediate,
+            description: l10n.levelIntermediateSubtitle,
             isSelected: selected == 'intermediate',
             onTap: () => onSelect('intermediate'),
           ),
           const SizedBox(height: 10),
           _SelectableCard(
             emoji: '🚀',
-            label: 'Avançado',
-            description: 'Quero me aperfeiçoar',
+            label: l10n.levelAdvanced,
+            description: l10n.levelAdvancedSubtitle,
             isSelected: selected == 'advanced',
             onTap: () => onSelect('advanced'),
           ),
@@ -316,6 +326,8 @@ class _ModePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
@@ -325,7 +337,7 @@ class _ModePage extends StatelessWidget {
           const Center(child: Text('🎯', style: TextStyle(fontSize: 64))),
           const SizedBox(height: 32),
           Text(
-            'Como quer praticar?',
+            l10n.onboardingPage3Title,
             style: GoogleFonts.nunito(
               fontSize: 24,
               fontWeight: FontWeight.w800,
@@ -339,7 +351,7 @@ class _ModePage extends StatelessWidget {
               Expanded(
                 child: _ModeGridCard(
                   emoji: '💬',
-                  label: 'Casual',
+                  label: l10n.modeCasual,
                   isSelected: selected == 'casual',
                   onTap: () => onSelect('casual'),
                 ),
@@ -348,7 +360,7 @@ class _ModePage extends StatelessWidget {
               Expanded(
                 child: _ModeGridCard(
                   emoji: '💼',
-                  label: 'Negócios',
+                  label: l10n.modeBusiness,
                   isSelected: selected == 'business',
                   onTap: () => onSelect('business'),
                 ),
@@ -361,7 +373,7 @@ class _ModePage extends StatelessWidget {
               Expanded(
                 child: _ModeGridCard(
                   emoji: '✈️',
-                  label: 'Viagem',
+                  label: l10n.modeTravel,
                   isSelected: selected == 'travel',
                   onTap: () => onSelect('travel'),
                 ),
@@ -370,7 +382,7 @@ class _ModePage extends StatelessWidget {
               Expanded(
                 child: _ModeGridCard(
                   emoji: '🎯',
-                  label: 'Entrevista',
+                  label: l10n.modeInterview,
                   isSelected: selected == 'interview',
                   onTap: () => onSelect('interview'),
                 ),

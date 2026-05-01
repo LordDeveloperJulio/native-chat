@@ -1,5 +1,7 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -9,8 +11,13 @@ import 'features/main/main_screen.dart';
 import 'features/onboarding/onboarding_screen.dart';
 import 'shared/theme/app_theme.dart';
 
+import 'package:study_english/l10n/app_localizations.dart';
+
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
+  await Firebase.initializeApp();
   await dotenv.load(fileName: '.env');
   final prefs = await SharedPreferences.getInstance();
   final onboardingDone = prefs.getBool('onboarding_done') ?? false;
@@ -26,6 +33,8 @@ void main() async {
     debugPrint('[RevenueCat] Falha na inicialização: $e');
   }
 
+  FlutterNativeSplash.remove();
+
   runApp(ProviderScope(
     child: LinguaAIApp(showOnboarding: !onboardingDone),
   ));
@@ -39,9 +48,20 @@ class LinguaAIApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'LinguaAI',
+      title: 'NativeChat',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      localeResolutionCallback: (locale, supportedLocales) {
+        if (locale == null) return const Locale('en');
+        for (final supported in supportedLocales) {
+          if (supported.languageCode == locale.languageCode) {
+            return supported;
+          }
+        }
+        return const Locale('en');
+      },
       home: showOnboarding ? const OnboardingScreen() : const MainScreen(),
     );
   }

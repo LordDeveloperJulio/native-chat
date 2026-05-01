@@ -8,6 +8,8 @@ import '../../core/purchases/purchase_service.dart';
 import '../../core/purchases/revenue_cat_config.dart';
 import '../../shared/theme/app_theme.dart';
 
+import 'package:study_english/l10n/app_localizations.dart';
+
 class PaywallScreen extends ConsumerStatefulWidget {
   const PaywallScreen({super.key});
 
@@ -43,12 +45,14 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
     if (!mounted) return;
     setState(() => _isLoading = false);
 
+    final l10n = AppLocalizations.of(context)!;
+
     switch (result.result) {
       case PurchaseResult.success:
         ref.invalidate(isPremiumProvider);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('Bem-vindo ao Premium! 🎉'),
+            content: Text(l10n.paywallSuccessMessage),
             backgroundColor: AppTheme.primary,
             behavior: SnackBarBehavior.floating,
             shape:
@@ -62,7 +66,7 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
       case PurchaseResult.alreadyPremium:
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(result.message ?? 'Erro ao processar pagamento.'),
+            content: Text(result.message ?? l10n.errorUnknown),
             backgroundColor: AppTheme.error,
             behavior: SnackBarBehavior.floating,
             shape:
@@ -78,11 +82,13 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
     if (!mounted) return;
     setState(() => _isLoading = false);
 
+    final l10n = AppLocalizations.of(context)!;
+
     if (result.result == PurchaseResult.success) {
       ref.invalidate(isPremiumProvider);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Assinatura restaurada com sucesso!'),
+          content: Text(l10n.paywallRestoredMessage),
           backgroundColor: AppTheme.primary,
           behavior: SnackBarBehavior.floating,
           shape:
@@ -93,7 +99,7 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(result.message ?? 'Nenhuma assinatura encontrada.'),
+          content: Text(result.message ?? l10n.errorUnknown),
           backgroundColor: AppTheme.error,
           behavior: SnackBarBehavior.floating,
           shape:
@@ -116,10 +122,10 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 24, 16, 0),
             child: packagesAsync.when(
-              loading: () => _buildContent(packages: [], loading: true),
-              error: (e, _) => _buildContent(packages: [], loading: false),
+              loading: () => _buildContent(context: context, packages: [], loading: true),
+              error: (e, _) => _buildContent(context: context, packages: [], loading: false),
               data: (packages) =>
-                  _buildContent(packages: packages, loading: false),
+                  _buildContent(context: context, packages: packages, loading: false),
             ),
           ),
         ],
@@ -128,24 +134,26 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
   }
 
   Widget _buildContent({
+    required BuildContext context,
     required List<Package> packages,
     required bool loading,
   }) {
+    final l10n = AppLocalizations.of(context)!;
     final monthlyPrice = loading
         ? null
-        : (_monthlyPackage(packages)?.storeProduct.priceString ?? 'R\$ 19,90');
+        : (_monthlyPackage(packages)?.storeProduct.priceString ?? l10n.paywallPlanMonthlyPrice);
     final annualPrice = loading
         ? null
-        : (_annualPackage(packages)?.storeProduct.priceString ?? 'R\$ 149');
+        : (_annualPackage(packages)?.storeProduct.priceString ?? l10n.paywallPlanAnnualPrice);
     final hasPackages = packages.isNotEmpty;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _PlanCard(
-          label: 'Mensal',
-          price: monthlyPrice ?? 'R\$ 19,90',
-          period: '/mês',
+          label: l10n.paywallPlanMonthly,
+          price: monthlyPrice ?? l10n.paywallPlanMonthlyPrice,
+          period: l10n.paywallPlanMonthlyPeriod,
           isPriceLoading: loading,
           isHighlighted: false,
           isSelected: _selectedPlanIndex == 0,
@@ -153,11 +161,11 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
         ),
         const SizedBox(height: 10),
         _PlanCard(
-          label: 'Anual',
-          price: annualPrice ?? 'R\$ 149',
-          period: '/ano',
-          badge: 'Mais popular',
-          savings: 'Economia de 38%',
+          label: l10n.paywallPlanAnnual,
+          price: annualPrice ?? l10n.paywallPlanAnnualPrice,
+          period: l10n.paywallPlanAnnualPeriod,
+          badge: l10n.paywallPlanPopular,
+          savings: l10n.paywallPlanAnnualSavings,
           isPriceLoading: loading,
           isHighlighted: true,
           isSelected: _selectedPlanIndex == 1,
@@ -174,26 +182,26 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
               : null,
         ),
         const SizedBox(height: 10),
-        const Center(
+        Center(
           child: Text(
-            '7 dias grátis · Sem cobrança até lá',
-            style: TextStyle(fontSize: 11, color: AppTheme.textSecondary),
+            l10n.paywallTrial,
+            style: const TextStyle(fontSize: 11, color: AppTheme.textSecondary),
           ),
         ),
         const SizedBox(height: 8),
-        const Center(
+        Center(
           child: Text(
-            'Cancele a qualquer momento.',
-            style: TextStyle(fontSize: 11, color: AppTheme.textSecondary),
+            l10n.paywallCancelAnytime,
+            style: const TextStyle(fontSize: 11, color: AppTheme.textSecondary),
           ),
         ),
         const SizedBox(height: 16),
         Center(
           child: GestureDetector(
             onTap: _isLoading ? null : _restore,
-            child: const Text(
-              'Já é assinante? Restaurar compras',
-              style: TextStyle(
+            child: Text(
+              l10n.paywallRestore,
+              style: const TextStyle(
                 fontSize: 12,
                 color: AppTheme.textSecondary,
                 decoration: TextDecoration.underline,
@@ -213,6 +221,8 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
 class _HeroSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Container(
       width: double.infinity,
       color: AppTheme.primary,
@@ -231,7 +241,7 @@ class _HeroSection extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
-                'LinguaAI Premium',
+                l10n.paywallBadge,
                 style: GoogleFonts.nunito(
                   fontSize: 11,
                   fontWeight: FontWeight.w700,
@@ -241,7 +251,7 @@ class _HeroSection extends StatelessWidget {
             ),
             const SizedBox(height: 14),
             Text(
-              'Fale com fluência\nsem limites',
+              l10n.paywallTitle,
               style: GoogleFonts.nunito(
                 fontSize: 22,
                 fontWeight: FontWeight.w800,
@@ -252,7 +262,7 @@ class _HeroSection extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             Text(
-              'Conversas ilimitadas com a Aria,\nseu desenvolvimento acelerado.',
+              l10n.paywallSubtitle,
               style: GoogleFonts.nunito(
                 fontSize: 14,
                 color: Colors.white.withValues(alpha: 0.88),
@@ -393,17 +403,17 @@ class _PlanCard extends StatelessWidget {
 // ─── Benefits list ────────────────────────────────────────────────────────────
 
 class _BenefitsList extends StatelessWidget {
-  static const _benefits = [
-    'Mensagens ilimitadas por dia',
-    'Histórico completo de conversas',
-    'Análises detalhadas de progresso',
-    'Prática de pronúncia (em breve)',
-    'Acesso offline (em breve)',
-    'Suporte prioritário',
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final benefits = [
+      l10n.paywallFeature1,
+      l10n.paywallFeature2,
+      l10n.paywallFeature3,
+      l10n.paywallFeature4,
+      l10n.paywallFeature5,
+    ];
+
     return Container(
       decoration: BoxDecoration(
         color: AppTheme.cardBackground,
@@ -411,7 +421,7 @@ class _BenefitsList extends StatelessWidget {
         border: Border.all(color: AppTheme.borderColor, width: 0.5),
       ),
       child: Column(
-        children: List.generate(_benefits.length * 2 - 1, (index) {
+        children: List.generate(benefits.length * 2 - 1, (index) {
           if (index.isOdd) {
             return const Divider(height: 0, indent: 16, endIndent: 16);
           }
@@ -434,7 +444,7 @@ class _BenefitsList extends StatelessWidget {
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
-                    _benefits[i],
+                    benefits[i],
                     style: const TextStyle(
                       fontSize: 13,
                       color: AppTheme.textPrimary,
@@ -465,6 +475,8 @@ class _CtaButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return GestureDetector(
       onTap: enabled ? onTap : null,
       child: AnimatedContainer(
@@ -487,7 +499,7 @@ class _CtaButton extends StatelessWidget {
                 ),
               )
             : Text(
-                'Começar agora',
+                l10n.paywallCTA,
                 style: GoogleFonts.nunito(
                   fontSize: 15,
                   fontWeight: FontWeight.w700,

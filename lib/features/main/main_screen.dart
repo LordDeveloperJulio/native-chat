@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../chat/chat_screen.dart';
-import '../flashcards/flashcard_screen.dart';
+import '../flashcards/decks_screen.dart';
 import '../home/home_screen.dart';
-import '../paywall/paywall_screen.dart';
 import '../progress/progress_screen.dart';
 import '../../shared/widgets/app_bottom_nav.dart';
 
@@ -20,9 +19,8 @@ class _MainScreenState extends State<MainScreen> {
   static const List<Widget> _screens = [
     HomeScreen(),
     ChatScreen(),
-    FlashcardScreen(),
+    DecksScreen(),
     ProgressScreen(),
-    PaywallScreen(),
   ];
 
   @override

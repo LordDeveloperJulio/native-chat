@@ -169,6 +169,74 @@
   "flashcardsPlayAgain": "Praticar novamente",
   "flashcardsEmpty": "Nenhuma palavra ainda",
   "flashcardsEmptySubtitle": "Pratique no chat e a Aria vai destacar palavras para você revisar aqui.",
+  "flashcardsHowItWorks": "Como funciona",
+  "flashcardsStep1": "Converse com a Aria",
+  "flashcardsStep2": "Aria destaca vocabulário novo",
+  "flashcardsStep3": "Revise as palavras aqui nos flashcards",
+
+  "deckStudyRemaining": "{remaining, plural, =1{1 carta restante} other{{remaining} cartas restantes}}",
+  "@deckStudyRemaining": {
+    "placeholders": {
+      "remaining": { "type": "int" }
+    }
+  },
+  "deckStudyQuestion": "QUESTÃO",
+  "deckStudyHowWasIt": "Como foi?",
+  "deckStudyAgain": "De novo",
+  "deckStudyHard": "Difícil",
+  "deckStudyGood": "Bom",
+  "deckStudyEasy": "Fácil",
+  "deckStudyAgainSub": "< 1 min",
+  "deckStudyHardSub": "6 min",
+  "deckStudyGoodSub": "10 min",
+  "deckStudyEasySub": "4 dias",
+  "deckStudyTapToReveal": "Toque para revelar",
+  "deckStudyDoneTitle": "Sessão concluída!",
+  "deckStudyUpToDateTitle": "Tudo em dia!",
+  "deckStudyDoneBody": "Você revisou {count} cartas nesta sessão.",
+  "@deckStudyDoneBody": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "deckStudyNoDueCards": "Nenhuma carta para revisar agora. Volte mais tarde!",
+  "deckStudyBackButton": "Voltar ao deck",
+
+  "decksTitle": "Meus Decks",
+  "decksSubtitle": "Revise e estude seus decks de flashcards",
+  "decksCardCount": "{count, plural, =1{1 carta} other{{count} cartas}}",
+  "@decksCardCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "decksDueCount": "{count, plural, =1{1 para revisar} other{{count} para revisar}}",
+  "@decksDueCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "decksUpToDate": "Em dia",
+  "decksDeleteTitle": "Excluir deck?",
+  "decksDeleteBody": "Excluir \"{title}\" com {count} cartas? Essa ação não pode ser desfeita.",
+  "@decksDeleteBody": {
+    "placeholders": {
+      "count": { "type": "int" },
+      "title": { "type": "String" }
+    }
+  },
+  "decksDeleteCancel": "Cancelar",
+  "decksDeleteConfirm": "Excluir",
+  "decksEmptyTitle": "Nenhum deck ainda",
+  "decksEmptyBody": "Crie um deck e eu vou gerar flashcards sobre qualquer tema de inglês para você.",
+  "decksEmptyButton": "Criar primeiro deck",
+  "decksGenerateError": "Falha ao gerar o deck. Tente novamente.",
+  "decksNewDeckTitle": "Novo deck",
+  "decksNewDeckSubtitle": "Escolha um tema e eu crio os flashcards para você",
+  "decksTopicHint": "ex: Passado Simples, Phrasal Verbs…",
+  "decksHowManyCards": "QUANTAS CARTAS?",
+  "decksCardsUnit": "cartas",
+  "decksGenerateButton": "Gerar deck",
 
   "premiumExclusive": "Exclusivo Premium",
   "premiumViewPlans": "Ver planos Premium",

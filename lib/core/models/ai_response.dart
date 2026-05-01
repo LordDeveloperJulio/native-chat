@@ -1,27 +1,31 @@
-// Modelo para a resposta estruturada retornada pelo GPT-4o.
-// O modelo é instruído a responder SOMENTE em JSON com este schema.
 import 'dart:convert';
 
 class AiResponse {
   final String reply;
-  final String? correction; // "wrong → correct" ou null
+  final String? correction;   // "wrong phrase → corrected form"
+  final String? grammarNote;  // explains the rule behind the correction
   final List<String> newWords;
   final int difficulty; // 1-10
 
   const AiResponse({
     required this.reply,
     this.correction,
+    this.grammarNote,
     required this.newWords,
     required this.difficulty,
   });
 
   factory AiResponse.fromJson(Map<String, dynamic> json) {
     final correctionRaw = json['correction'];
+    final grammarNoteRaw = json['grammar_note'];
     return AiResponse(
       reply: json['reply'] as String? ?? '',
       correction: (correctionRaw == null || correctionRaw == 'null')
           ? null
           : correctionRaw as String?,
+      grammarNote: (grammarNoteRaw == null || grammarNoteRaw == 'null')
+          ? null
+          : grammarNoteRaw as String?,
       newWords: (json['new_words'] as List<dynamic>?)
               ?.map((e) => e.toString())
               .toList() ??
@@ -30,7 +34,7 @@ class AiResponse {
     );
   }
 
-  /// Extrai o JSON da resposta bruta da API, tolerando texto extra ao redor.
+  /// Extracts JSON from raw API response, tolerating extra surrounding text.
   static AiResponse? tryParse(String raw) {
     try {
       final start = raw.indexOf('{');
