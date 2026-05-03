@@ -6,9 +6,8 @@ import 'package:purchases_flutter/purchases_flutter.dart';
 import '../../core/purchases/purchase_provider.dart';
 import '../../core/purchases/purchase_service.dart';
 import '../../core/purchases/revenue_cat_config.dart';
+import '../../l10n/app_localizations.dart';
 import '../../shared/theme/app_theme.dart';
-
-import 'package:study_english/l10n/app_localizations.dart';
 
 class PaywallScreen extends ConsumerStatefulWidget {
   const PaywallScreen({super.key});

@@ -7,27 +7,38 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'core/db/database.dart';
 import 'core/purchases/purchase_service.dart';
+import 'firebase_options.dart';
 import 'features/main/main_screen.dart';
 import 'features/onboarding/onboarding_screen.dart';
+import 'l10n/app_localizations.dart';
 import 'shared/theme/app_theme.dart';
-
-import 'package:study_english/l10n/app_localizations.dart';
 
 void main() async {
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
-  await Firebase.initializeApp();
-  await dotenv.load(fileName: '.env');
-  final prefs = await SharedPreferences.getInstance();
-  final onboardingDone = prefs.getBool('onboarding_done') ?? false;
+  bool onboardingDone = false;
 
-  // Inicializa RevenueCat sem bloquear o app em caso de falha
+  try {
+    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+    await dotenv.load(fileName: '.env');
+    final prefs = await SharedPreferences.getInstance();
+    onboardingDone = prefs.getBool('onboarding_done') ?? false;
+  } catch (e) {
+    debugPrint('[App] Falha na inicialização: $e');
+  }
+
+  String userId = 'anonymous';
   try {
     final db = AppDatabase();
     final dbUser = await db.getUser();
     await db.close();
-    final userId = dbUser?.id.toString() ?? 'anonymous';
+    userId = dbUser?.id.toString() ?? 'anonymous';
+  } catch (e) {
+    debugPrint('[DB] Falha ao buscar userId para RevenueCat: $e');
+  }
+
+  try {
     await PurchaseService().initialize(userId);
   } catch (e) {
     debugPrint('[RevenueCat] Falha na inicialização: $e');

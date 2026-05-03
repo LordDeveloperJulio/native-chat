@@ -4,10 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../../shared/theme/app_theme.dart';
 import 'flashcard_providers.dart';
-
-import 'package:study_english/l10n/app_localizations.dart';
 
 class FlashcardScreen extends ConsumerStatefulWidget {
   const FlashcardScreen({super.key});

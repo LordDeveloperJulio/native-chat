@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:firebase_ai/firebase_ai.dart';
+import 'package:flutter/foundation.dart';
 
 import '../models/ai_response.dart';
 
@@ -37,6 +38,7 @@ class GeminiClient {
 
       return AiResponse(reply: content, newWords: const [], difficulty: 5);
     } catch (e) {
+      debugPrint('[Gemini] chat error: $e');
       throw GeminiException('Erro ao conectar com a IA: $e');
     }
   }
@@ -85,6 +87,7 @@ Return ONLY the JSON array. No explanations, no markdown, no extra text.''';
               item['front']!.isNotEmpty && item['back']!.isNotEmpty)
           .toList();
     } catch (e) {
+      debugPrint('[Gemini] generateFlashcards error: $e');
       throw GeminiException('Erro ao gerar flashcards: $e');
     }
   }
@@ -102,6 +105,7 @@ Return ONLY the JSON array. No explanations, no markdown, no extra text.''';
       final response = await model.generateContent([Content.text(word)]);
       return response.text?.trim() ?? 'Definition not available.';
     } catch (e) {
+      debugPrint('[Gemini] getWordDefinition error: $e');
       throw GeminiException('Erro ao buscar definição: $e');
     }
   }

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../../../shared/theme/app_theme.dart';
-
-import 'package:study_english/l10n/app_localizations.dart';
 
 class CorrectionCard extends StatelessWidget {
   final String correction;

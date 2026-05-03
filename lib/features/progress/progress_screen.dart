@@ -5,11 +5,10 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../core/db/database.dart';
 import '../../core/purchases/purchase_provider.dart';
+import '../../l10n/app_localizations.dart';
 import '../../shared/theme/app_theme.dart';
 import '../../shared/widgets/premium_guard.dart';
 import 'progress_providers.dart';
-
-import 'package:study_english/l10n/app_localizations.dart';
 
 class ProgressScreen extends ConsumerWidget {
   const ProgressScreen({super.key});

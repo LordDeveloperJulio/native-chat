@@ -5,11 +5,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/db/database.dart';
+import '../../core/purchases/purchase_service.dart';
+import '../../l10n/app_localizations.dart';
 import '../../shared/theme/app_theme.dart';
 import '../home/home_providers.dart';
 import '../main/main_screen.dart';
-
-import 'package:study_english/l10n/app_localizations.dart';
 
 class OnboardingScreen extends ConsumerStatefulWidget {
   const OnboardingScreen({super.key});
@@ -64,7 +64,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 
     try {
       final db = ref.read(databaseProvider);
-      await db.createUser(UsersCompanion(
+      final newUser = await db.createUser(UsersCompanion(
         name: Value(_nameController.text.trim()),
         level: Value(_selectedLevel!),
         currentMode: Value(_selectedMode!),
@@ -75,6 +75,10 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       await prefs.setString('user_name', _nameController.text.trim());
       await prefs.setString('user_level', _selectedLevel!);
       await prefs.setString('user_mode', _selectedMode!);
+
+      try {
+        await PurchaseService().initialize(newUser.toString());
+      } catch (_) {}
 
       if (mounted) {
         Navigator.of(context).pushReplacement(

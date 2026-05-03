@@ -3,9 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/purchases/purchase_provider.dart';
 import '../../features/paywall/paywall_screen.dart';
+import '../../l10n/app_localizations.dart';
 import '../theme/app_theme.dart';
-
-import 'package:study_english/l10n/app_localizations.dart';
 
 class PremiumGuard extends ConsumerWidget {
   final Widget child;

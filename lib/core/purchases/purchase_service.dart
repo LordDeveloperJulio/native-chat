@@ -17,12 +17,12 @@ class PurchaseError {
 
 class PurchaseService {
   Future<void> initialize(String userId) async {
+    if (Platform.isIOS) return;
     try {
       if (kDebugMode) {
         await Purchases.setLogLevel(LogLevel.debug);
       }
-      final apiKey = Platform.isIOS ? appleApiKey : googleApiKey;
-      final configuration = PurchasesConfiguration(apiKey)
+      final configuration = PurchasesConfiguration(googleApiKey)
         ..appUserID = userId;
       await Purchases.configure(configuration);
     } catch (e) {
@@ -31,6 +31,7 @@ class PurchaseService {
   }
 
   Future<bool> isPremium() async {
+    if (Platform.isIOS) return false;
     try {
       final customerInfo = await Purchases.getCustomerInfo();
       return customerInfo.entitlements.active.containsKey(entitlementId);
@@ -40,6 +41,7 @@ class PurchaseService {
   }
 
   Future<List<Package>> getAvailablePackages() async {
+    if (Platform.isIOS) return [];
     try {
       final offerings = await Purchases.getOfferings();
       return offerings.current?.availablePackages ?? [];
@@ -49,6 +51,12 @@ class PurchaseService {
   }
 
   Future<PurchaseError> purchasePackage(Package package) async {
+    if (Platform.isIOS) {
+      return const PurchaseError(
+        result: PurchaseResult.error,
+        message: 'Compras não disponíveis no iOS no momento.',
+      );
+    }
     try {
       final customerInfo = await Purchases.purchasePackage(package);
       final active =
@@ -71,6 +79,12 @@ class PurchaseService {
   }
 
   Future<PurchaseError> restorePurchases() async {
+    if (Platform.isIOS) {
+      return const PurchaseError(
+        result: PurchaseResult.error,
+        message: 'Restauração não disponível no iOS no momento.',
+      );
+    }
     try {
       final customerInfo = await Purchases.restorePurchases();
       final active =
