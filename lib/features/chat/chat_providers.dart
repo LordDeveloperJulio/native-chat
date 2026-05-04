@@ -147,8 +147,8 @@ class ChatNotifier extends StateNotifier<ChatState> {
         history: history,
       );
 
-      // Salva resposta da IA no banco
-      await _db.insertMessage(MessagesCompanion(
+      // Salva resposta da IA no banco e captura o id gerado
+      final assistantId = await _db.insertMessage(MessagesCompanion(
         userId: Value(_userId),
         role: const Value('assistant'),
         content: Value(aiResponse.reply),
@@ -182,6 +182,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
       }
 
       final assistantMsg = ChatMessage(
+        id: assistantId,
         role: MessageRole.assistant,
         content: aiResponse.reply,
         aiResponse: aiResponse,
